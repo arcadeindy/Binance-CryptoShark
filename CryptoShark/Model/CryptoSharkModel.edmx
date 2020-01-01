@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CryptoSharkModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="SellOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SymbolId" Type="int" Nullable="false" />
+          <Property Name="OrderId" Type="bigint" Nullable="false" />
+          <Property Name="Quantity" Type="decimal" Precision="25" Scale="15" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="25" Scale="15" Nullable="false" />
+          <Property Name="StopLossPrice" Type="decimal" Precision="25" Scale="15" Nullable="false" />
+          <Property Name="StopLossAt" Type="datetime" />
+          <Property Name="StopLossExecutedPrice" Type="decimal" Precision="25" Scale="15" />
+          <Property Name="Status" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Symbol">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BaseAsset" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="QuoteAsset" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="QuantityIncrement" Type="decimal" Precision="20" Scale="10" Nullable="false" />
+          <Property Name="PriceIncrement" Type="decimal" Precision="20" Scale="10" Nullable="false" />
+          <Property Name="NotionalMinimumValue" Type="decimal" Precision="20" Scale="10" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_SellOrder_Symbol">
+          <End Role="Symbol" Type="Self.Symbol" Multiplicity="1" />
+          <End Role="SellOrder" Type="Self.SellOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symbol">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SellOrder">
+              <PropertyRef Name="SymbolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CryptoSharkModelStoreContainer">
+          <EntitySet Name="SellOrder" EntityType="Self.SellOrder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Symbol" EntityType="Self.Symbol" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_SellOrder_Symbol" Association="Self.FK_SellOrder_Symbol">
+            <End Role="Symbol" EntitySet="Symbol" />
+            <End Role="SellOrder" EntitySet="SellOrder" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CryptoSharkModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="CryptoSharkEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="SellOrders" EntityType="CryptoSharkModel.SellOrder" />
+          <EntitySet Name="Symbols" EntityType="CryptoSharkModel.Symbol" />
+          <AssociationSet Name="FK_SellOrder_Symbol" Association="CryptoSharkModel.FK_SellOrder_Symbol">
+            <End Role="Symbol" EntitySet="Symbols" />
+            <End Role="SellOrder" EntitySet="SellOrders" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="SellOrder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SymbolId" Type="Int32" Nullable="false" />
+          <Property Name="OrderId" Type="Int64" Nullable="false" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="25" Scale="15" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="25" Scale="15" />
+          <Property Name="StopLossPrice" Type="Decimal" Nullable="false" Precision="25" Scale="15" />
+          <Property Name="StopLossAt" Type="DateTime" Precision="3" />
+          <Property Name="StopLossExecutedPrice" Type="Decimal" Precision="25" Scale="15" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Symbol" Relationship="CryptoSharkModel.FK_SellOrder_Symbol" FromRole="SellOrder" ToRole="Symbol" />
+        </EntityType>
+        <EntityType Name="Symbol">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BaseAsset" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QuoteAsset" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QuantityIncrement" Type="Decimal" Nullable="false" Precision="20" Scale="10" />
+          <Property Name="PriceIncrement" Type="Decimal" Nullable="false" Precision="20" Scale="10" />
+          <Property Name="NotionalMinimumValue" Type="Decimal" Nullable="false" Precision="20" Scale="10" />
+          <NavigationProperty Name="SellOrders" Relationship="CryptoSharkModel.FK_SellOrder_Symbol" FromRole="Symbol" ToRole="SellOrder" />
+        </EntityType>
+        <Association Name="FK_SellOrder_Symbol">
+          <End Type="CryptoSharkModel.Symbol" Role="Symbol" Multiplicity="1" />
+          <End Type="CryptoSharkModel.SellOrder" Role="SellOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Symbol">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SellOrder">
+              <PropertyRef Name="SymbolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CryptoSharkModelStoreContainer" CdmEntityContainer="CryptoSharkEntities">
+          <EntitySetMapping Name="SellOrders">
+            <EntityTypeMapping TypeName="CryptoSharkModel.SellOrder">
+              <MappingFragment StoreEntitySet="SellOrder">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StopLossExecutedPrice" ColumnName="StopLossExecutedPrice" />
+                <ScalarProperty Name="StopLossAt" ColumnName="StopLossAt" />
+                <ScalarProperty Name="StopLossPrice" ColumnName="StopLossPrice" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="SymbolId" ColumnName="SymbolId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Symbols">
+            <EntityTypeMapping TypeName="CryptoSharkModel.Symbol">
+              <MappingFragment StoreEntitySet="Symbol">
+                <ScalarProperty Name="NotionalMinimumValue" ColumnName="NotionalMinimumValue" />
+                <ScalarProperty Name="PriceIncrement" ColumnName="PriceIncrement" />
+                <ScalarProperty Name="QuantityIncrement" ColumnName="QuantityIncrement" />
+                <ScalarProperty Name="QuoteAsset" ColumnName="QuoteAsset" />
+                <ScalarProperty Name="BaseAsset" ColumnName="BaseAsset" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
